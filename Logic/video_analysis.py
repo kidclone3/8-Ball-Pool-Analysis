@@ -1,4 +1,4 @@
-'''Video Analysis Module'''
+"""Video Analysis Module"""
 
 import os
 import numpy as np
@@ -11,7 +11,10 @@ from Logic.Detection.ball_detection import BallDetection
 
 
 class VideoAnalysis:
-    '''Responsible for Video Analysis'''
+    """
+    Responsible for Video Analysis
+
+    """
 
     TRAINING_FOLDER = 'Training\\Example 01\\'
 
@@ -21,7 +24,15 @@ class VideoAnalysis:
     ball_detection = BallDetection()
 
     def identify_parameters(self, identify_for_holes, identify_for_balls, options):
-        '''Iterating through a number of images and saving the image results based on different parameter values'''
+        """
+        Iterating through a number of images and saving the image results based on different parameter values
+
+        Args:
+            identify_for_holes (bool): Flag indicating whether to identify parameters for hole detection
+            identify_for_balls (bool): Flag indicating whether to identify parameters for ball detection
+            options (Options): The options to be used
+
+        """
 
         for files in os.listdir(self.TRAINING_FOLDER):
             image_path = os.path.join(self.TRAINING_FOLDER, files)
@@ -41,7 +52,14 @@ class VideoAnalysis:
                     self.find_ball_parameters(image_path, hole_positions, options)
 
     def find_hole_parameters(self, image_path, options):
-        '''Iterate through a range of values and saving each result in the aim of identifying the best parameters for hole detection'''
+        """
+        Iterate through a range of values and saving each result in the aim of identifying the best parameters for
+        hole detection
+
+        Args:
+            image_path (str): The path to the image to be analysed
+            options (Options): The options to be used
+        """
 
         for param2 in range(13, 17, 1):
             for param1 in range(10, 310, 10):
@@ -62,7 +80,15 @@ class VideoAnalysis:
                 cv2.imwrite(self.HOLE_TRAINING_PATH + str(param2) + '_' + str(param1) + '.jpg', rgb_image)
 
     def find_ball_parameters(self, image_path, hole_positions, options):
-        '''Iterate through a range of values and saving each result in the goal of identify the best parameters for ball detection'''
+        """
+        Iterate through a range of values and saving each result in the goal of identify the best parameters for
+        ball detection
+
+        Args:
+            image_path (str): The path to the image to be analysed
+            hole_positions (list): The positions of the holes
+            options (Options): The options to be used
+        """
 
         board_positions = self.ball_detection.board_boundary(hole_positions)
 
@@ -87,7 +113,12 @@ class VideoAnalysis:
                 cv2.imwrite(self.BALL_TRAINING_PATH + str(param2) + '_' + str(param1) + '.jpg', rgb_image)
 
     def analyse_video(self, options):
-        '''Responsible for modelling the implemented features on a given video which can be displayed or saved'''
+        """
+        Responsible for modelling the implemented features on a given video which can be displayed or saved
+
+        Args:
+            options (Options): The options to be used
+        """
 
         bot = Bot()
         frame_count = 0
@@ -174,7 +205,12 @@ class VideoAnalysis:
 
     @staticmethod
     def print_timestamp(frame_count):
-        '''Responsible for outputting a timestamp based the frame count'''
+        """
+        Responsible for outputting a timestamp based the frame count
+
+        Args:
+            frame_count (int): The frame count
+        """
 
         if frame_count % 30 == 0:
             time_hours = int(frame_count / 108000)

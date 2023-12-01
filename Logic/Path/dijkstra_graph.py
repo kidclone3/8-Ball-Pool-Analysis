@@ -1,4 +1,4 @@
-'''Dijkstra Graph'''
+"""Dijkstra Graph"""
 
 from collections import defaultdict
 
@@ -7,27 +7,44 @@ import numpy as np
 
 
 class DijkstraGraph:
-    '''Responsible for handling dijkstra graph'''
+    """
+    Responsible for Dijkstra Graph
+    """
 
     def __init__(self):
-        '''Initiating a graph'''
 
         self.edges = defaultdict(list)
         self.weights = {}
 
     def add_edge(self, from_node, to_node, weight):
-        '''Adding an edge between two nodes'''
+        """
+        Responsible for adding an edge to the graph
+        Args:
+            from_node (list[float]): The from node
+            to_node (list[float]): The to node
+            weight (int): The weight of the edge
 
-        to_node = (to_node[0], to_node[1])
-        from_node = (from_node[0], from_node[1])
+        Returns:
 
-        self.edges[from_node].append(to_node)
-        self.edges[to_node].append(from_node)
+        """
+        _to_node = (to_node[0], to_node[1])
+        _from_node = (from_node[0], from_node[1])
+
+        self.edges[_from_node].append(_to_node)
+        self.edges[_to_node].append(_from_node)
         self.weights[(from_node, to_node)] = weight
         self.weights[(to_node, from_node)] = weight
 
     def find_any_goal_path(self, start, goals):
-        '''Responsible for finding optimal path for any goal'''
+        """
+        Responsible for finding the optimal path for a goal
+        Args:
+            start (list[float]): The start node
+            goals (list[list[float]]): The goals
+
+        Returns:
+
+        """
 
         paths = []
         distances = []
@@ -48,7 +65,15 @@ class DijkstraGraph:
         return []
 
     def find_a_goal_path(self, initial, end):
-        '''Responsible for calculating the optimal path for a goal'''
+        """
+        Responsible for finding the optimal path for a goal
+        Args:
+            initial (tuple(float, float)): The initial node
+            end (tuple(float, float)): The end node
+
+        Returns:
+
+        """
 
         shortest_paths = {initial: (None, 0)}
         current_node = initial
@@ -75,7 +100,7 @@ class DijkstraGraph:
             # Next node is the destination with the lowest weight
             current_node = min(next_destinations, key=lambda k: next_destinations[k][1])
 
-        # Work back through destinations in shortest path
+        # Work back through destinations in the shortest path
         path = []
         path_weight = 0
 

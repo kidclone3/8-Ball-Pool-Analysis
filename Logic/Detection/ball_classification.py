@@ -1,19 +1,33 @@
-'''Ball Classification Module'''
+"""Ball Classification Module"""
 
 import math
 
 
 class BallClassification:
-    '''Responsible for classifying game balls'''
+    """Responsible for classifying game balls"""
 
     @staticmethod
     def get_ball_radius(x_position, y_position, options):
-        '''Calculate radius from ball point'''
+        """
+        Calculate radius from ball point
+
+        Args:
+            x_position (int): The x position of the ball
+            y_position (int): The y position of the ball
+            options (Options): The options to be used
+        """
 
         return math.sqrt(math.pow(options.ball_radius - x_position, 2) + math.pow(options.ball_radius - y_position, 2))
 
     def get_ball_pixels(self, frame, position, options):
-        '''Responsible for returning an array of pixels that represent the circle'''
+        """
+        Responsible for returning an array of pixels that represent the circle
+
+        Args:
+            frame (numpy): The frame to find the balls in
+            position (tuple): The position of the ball
+            options (Options): The options to be used
+        """
 
         ball_pixels = []
 
@@ -33,7 +47,12 @@ class BallClassification:
 
     @staticmethod
     def get_white_count(ball_pixels):
-        '''Finding the number of white pixels within the ball pixels'''
+        """
+        Finding the number of white pixels within the ball pixels
+
+        Args:
+            ball_pixels (list): The ball pixels
+        """
 
         white_count = 0
 
@@ -49,7 +68,12 @@ class BallClassification:
 
     @staticmethod
     def get_black_count(ball_pixels):
-        '''Finding the number of black pixels within the ball pixels'''
+        """
+        Finding the number of black pixels within the ball pixels
+
+        Args:
+            ball_pixels (list): The ball pixels
+        """
 
         black_count = 0
 
@@ -65,24 +89,47 @@ class BallClassification:
 
     @staticmethod
     def is_solid_ball(white_count, black_count):
-        '''Checking whether the pixel count is a solid ball'''
+        """
+        Checking whether the pixel count is a solid ball
+
+        Args:
+            white_count (int): The white pixel count
+            black_count (int): The black pixel count
+        """
 
         return 7 <= white_count <= 72 and 0 <= black_count <= 41
 
     @staticmethod
     def is_striped_ball(white_count, black_count):
-        '''Checking whether the pixel count is a striped ball'''
+        """
+        Checking whether the pixel count is a striped ball
+
+        Args:
+            white_count (int): The white pixel count
+            black_count (int): The black pixel count
+        """
 
         return 73 <= white_count <= 159 and 0 <= black_count <= 58
 
     @staticmethod
     def is_black_ball(white_count, black_count):
-        '''Checking whether the pixel count is a black ball'''
+        """
+        Checking whether the pixel count is a black ball
+
+        Args:
+            white_count (int): The white pixel count
+            black_count (int): The black pixel count
+        """
 
         return (7 <= white_count <= 38 and 131 <= black_count <= 177) or (73 <= white_count <= 159 and 83 <= black_count <= 99)
 
     @staticmethod
     def is_white_ball(white_count):
-        '''Checking whether the pixel count is a white ball'''
+        """
+        Checking whether the pixel count is a white ball
+
+        Args:
+            white_count (int): The white pixel count
+        """
 
         return 160 <= white_count <= 238

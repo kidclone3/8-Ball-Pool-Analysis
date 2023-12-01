@@ -1,10 +1,10 @@
-'''Ball Colour Module'''
+"""Ball Colour Module"""
 
 from enum import Enum
 
 
 class BallColour(Enum):
-    '''Responsible for handling detection training'''
+    """Responsible for handling detection training"""
 
     Solid = 1
     Strip = 2

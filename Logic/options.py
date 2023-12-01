@@ -1,9 +1,37 @@
-'''Options Module'''
+"""Options Module"""
 
 from Logic.Detection.ball_colour import BallColour
 
 
 class Options:
+    """
+    Responsible for handling the program options
+
+    Parameters:
+    - args: argparse.Namespace
+        An argparse namespace containing the following attributes:
+
+        - ball_radius: List[float]
+            Radius of the billiard balls.
+        - hole_radius: List[float]
+            Radius of the pockets (holes) on the billiard table.
+        - border_distance: List[float]
+            Distance between the table border and the playing area.
+        - target_balls: List[str]
+            Type of target balls, either 'solid' or 'stripe'.
+        - input_video: str
+            Path to the input video file.
+        - output_video: str
+            Path to save the output video file.
+        - skip_frame: List[int]
+            Number of frames to skip in the input video processing.
+        - show_video: bool
+            Flag indicating whether to display the processed video.
+        - save_video: bool
+            Flag indicating whether to save the processed video.
+
+
+    """
     def __init__(self, args):
         self.ball_radius = args.ball_radius[0]
         self.ball_diameter = args.ball_radius[0] * 2.2

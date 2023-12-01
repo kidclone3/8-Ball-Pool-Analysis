@@ -1,15 +1,20 @@
-'''Ball Detection Module'''
+"""Ball Detection Module"""
 
 import numpy as np
 import cv2
 
 
 class BallDetection:
-    '''Responsible for detecting game balls and holes'''
+    """Responsible for detecting game balls and holes"""
 
     @staticmethod
     def board_boundary(holes):
-        '''Responsible for returning the boundary of the board'''
+        """
+        Responsible for returning the boundary of the board
+
+        Args:
+            holes (list): The holes to be used
+        """
 
         min_x = min(holes, key=lambda t: t[0])[0]
         min_y = min(holes, key=lambda t: t[1])[1]
@@ -20,7 +25,12 @@ class BallDetection:
 
     @staticmethod
     def find_corner_holes(entire_frame):
-        '''Responsible for returning an array of hole positions'''
+        """
+        Responsible for returning an array of hole positions
+
+        Args:
+            entire_frame (numpy): The entire frame to find the holes in
+        """
 
         detected_holes = []
 
@@ -38,7 +48,12 @@ class BallDetection:
 
     @staticmethod
     def find_balls(board_frame_edges):
-        '''Responsible for returning an array of ball positions'''
+        """
+        Responsible for returning an array of ball positions
+
+        Args:
+            board_frame_edges (numpy): The board frame edges to find the balls in
+        """
 
         detected_balls = []
 

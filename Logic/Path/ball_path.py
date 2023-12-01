@@ -1,4 +1,4 @@
-'''Ball Path Finding Handling Module'''
+"""Ball Path Finding Handling Module"""
 
 import math
 import numpy as np
@@ -9,7 +9,51 @@ from Logic.Path.dijkstra_graph import DijkstraGraph
 
 
 class BallPath:
-    ''' Responsible for finding an optimal path using dijkstra algorithm '''
+    """
+    Responsible for finding an optimal path using dijkstra algorithm
+
+    Parameters:
+        balls (list[tuple[float, float]]):
+            List of tuples representing the positions of all the billiard balls.
+        holes (list[tuple[float, float]]):
+            List of tuples representing the positions of the pockets (holes) on the billiard table.
+        options (Options):
+            Instance of the options class.
+
+    Attributes:
+        graph (DijkstraGraph):
+            instance representing the graph used for pathfinding.
+
+        ball_colour (BallColour):
+            Color of the target balls.
+
+        white_index (int|None):
+            Index of the white ball in the 'balls' list, or None if not present.
+
+        target_indices (list[int]):
+            Indices of the target balls in the 'balls' list.
+
+        balls (list[tuple[float, float]]):
+            List of tuples representing the positions of all the billiard balls.
+
+        target_balls (list[tuple[float, float]]):
+            List of tuples representing the positions of the target balls.
+
+        white (tuple[float, float] or None):
+            Position of the white ball or None if not present.
+
+        sorted_holes (list[tuple[float, float]]):
+            List of tuples representing the sorted positions of the pockets (holes) on the billiard table.
+
+        target_holes (list[tuple[float, float]]):
+            List of tuples representing the positions of the target holes.
+
+        all_objects (list[tuple[float, float]]):
+            List of tuples representing the positions of all billiard objects (balls and target holes).
+
+        shrink_borders (bool):
+            Flag indicating whether borders should shrink based on options.
+    """
 
     vectors = Vectors()
 
@@ -36,7 +80,12 @@ class BallPath:
         self.shrink_borders = self.get_shrink_borders(options)
 
     def find_path(self, options):
-        '''Responsible for calculating an optimal path for one hit'''
+        """
+        Responsible for calculating an optimal path for one hit
+
+        Args:
+            options (Options): The options to be used
+        """
 
         if self.white_index and self.target_indices:
             self.add_graph_edges(options)
@@ -51,7 +100,12 @@ class BallPath:
         return []
 
     def add_graph_edges(self, options):
-        '''Populating the graph with valid edges'''
+        """
+        Populating the graph with valid edges
+
+        Args:
+            options (Options): The options to be used
+        """
 
         for target_hole_index, target_hole in enumerate(self.target_holes):
             for target_index in self.target_indices:
@@ -68,14 +122,22 @@ class BallPath:
                             distance = self.vectors.distance_from_two_points(target_ball_position, target_hole)
                             self.graph.add_edge(target_ball_position, target_hole, distance)
                         else:
-                            # When the shot is not possible the shortest distance between the white ball and the target ball is considered
-                            # instead which adds a constant distance to make such paths less favourable than those that reach a hole
+                            # When the shot is not possible the shortest distance between the white ball and the
+                            # target ball is considered instead which adds a constant distance to make such paths
+                            # less favourable than those that reach a hole
 
                             distance = self.vectors.distance_from_two_points(self.white, target_ball_position)
                             self.graph.add_edge(self.white, target_ball_position, distance + 10000)
 
     def get_target_hit_position(self, ball_index, hole_index, options):
-        '''Responsible for calculating the target hit position'''
+        """
+        Responsible for calculating the target hit position
+
+        Args:
+            ball_index (int): The index of the ball
+            hole_index (int): The index of the hole
+            options (Options): The options to be used
+        """
 
         ball = self.balls[ball_index]
         hole = self.target_holes[hole_index]
@@ -106,6 +168,17 @@ class BallPath:
         return target_position
 
     def is_path_valid(self, white_position, target_hit_position, exclude_indices, options):
+        """
+        Responsible for checking if a path is valid
+        Args:
+            white_position (tuple[float, float]):
+            target_hit_position (tuple[float, float]):
+            exclude_indices (list[int]):
+            options (Options): The options to be used
+
+        Returns:
+
+        """
         line = self.vectors.line_from_two_points(white_position, target_hit_position)
 
         for i, a_ball in enumerate(self.balls):
@@ -121,6 +194,18 @@ class BallPath:
 
     @staticmethod
     def is_possible_shot(white, target_ball, target_hole, options):
+        """
+        Responsible for checking if a shot is possible
+
+        Args:
+            white (tuple[float, float]): Coordinates of the white ball
+            target_ball (tuple[float, float]):
+            target_hole (tuple[float, float]):
+            options (Options): The options to be used
+
+        Returns:
+
+        """
         lower_target_ball = (target_ball[0] - options.ball_diameter, target_ball[1] - options.ball_diameter)
         upper_target_ball = (target_ball[0] - options.ball_diameter, target_ball[1] - options.ball_diameter)
 
@@ -134,22 +219,37 @@ class BallPath:
 
     @staticmethod
     def get_balls_index(balls, ball_colour):
-        '''Find balls which have a particular colour'''
+        """
+        Responsible for returning the index of the ball
+        Args:
+            balls (list[tuple[float, float]]):
+            ball_colour (BallColour):
 
+        Returns:
+
+        """
         ball_colour_indices = []
 
         for i, _ in enumerate(balls):
             if balls[i][2] is ball_colour:
                 ball_colour_indices.append(i)
 
-        if (ball_colour is BallColour.White or ball_colour is BallColour.Black):
+        if ball_colour == BallColour.White or ball_colour == BallColour.Black:
             if ball_colour_indices:
                 return ball_colour_indices[0]
 
         return ball_colour_indices
 
     def get_target_holes(self, options):
-        '''Finding the target holes which are used to score a ball'''
+        """
+        Responsible for returning the target holes
+
+        Args:
+            options (Options):
+
+        Returns:
+
+        """
 
         target_holes = []
 
@@ -177,7 +277,15 @@ class BallPath:
         return target_holes
 
     def get_shrink_borders(self, options):
-        '''Responsible for shrinking the game border'''
+        """
+        Responsible for returning the shrink borders
+
+        Args:
+            options:
+
+        Returns:
+
+        """
 
         minor_scale = options.middle_border_radius
         major_scale = options.corner_border_radius

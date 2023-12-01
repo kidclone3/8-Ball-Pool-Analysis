@@ -1,16 +1,19 @@
-'''Bot Handling Module'''
+"""Bot Handling Module"""
 
 import cv2
 
-from Logic.Path.vectors import Vectors
-from Logic.Path.ball_path import BallPath
+from Logic.Detection.ball_classification import BallClassification
 from Logic.Detection.ball_colour import BallColour
 from Logic.Detection.ball_detection import BallDetection
-from Logic.Detection.ball_classification import BallClassification
+from Logic.Path.ball_path import BallPath
+from Logic.Path.vectors import Vectors
 
 
 class Bot:
-    '''Responsible for handling the 8 ball game bot'''
+    """
+    Responsible for handling the 8 balls game bot
+
+    """
 
     balls = []
     holes = []
@@ -20,7 +23,14 @@ class Bot:
     ball_classification = BallClassification()
 
     def find_holes(self, frame):
-        '''Responsible for finding the holes if not set'''
+        """
+        Responsible for finding the holes if not set
+
+        Args:
+            frame (numpy): The frame to find the holes in
+        Returns:
+            None
+        """
 
         if not self.holes:
             corner_holes = self.ball_detection.find_corner_holes(frame)
@@ -30,11 +40,19 @@ class Bot:
 
                 board_positions = self.ball_detection.board_boundary(self.holes)
 
-                self.holes.append((int(board_positions[0] + ((board_positions[2] - board_positions[0]) / 2)), board_positions[1]))
-                self.holes.append((int(board_positions[0] + ((board_positions[2] - board_positions[0]) / 2)), board_positions[3]))
+                self.holes.append(
+                    (int(board_positions[0] + ((board_positions[2] - board_positions[0]) / 2)), board_positions[1]))
+                self.holes.append(
+                    (int(board_positions[0] + ((board_positions[2] - board_positions[0]) / 2)), board_positions[3]))
 
     def find_balls(self, frame, options):
-        '''Responsible for finding the balls'''
+        """
+        Responsible for finding the balls
+
+        Args:
+            frame (numpy): The frame to find the balls in
+            options (Options): The options to be used
+        """
 
         board_positions = self.ball_detection.board_boundary(self.holes)
 
@@ -47,7 +65,15 @@ class Bot:
             self.update_ball_structure(frame, board_positions, detected_balls, options)
 
     def update_ball_structure(self, frame, board_positions, detected_balls, options):
-        '''Responsible for handling updating the ball structure to assist the bot'''
+        """
+        Responsible for handling updating the ball structure to assist the bot
+        Args:
+            frame (numpy): The frame to find the balls in
+            board_positions (tuple): The board positions
+            detected_balls (list): The detected balls
+            options (Options): The options to be used
+
+        """
 
         self.balls = []
 
@@ -60,12 +86,25 @@ class Bot:
 
     @staticmethod
     def update_ball_positions(board_positions, detected_ball):
-        '''Responsible for updating the ball position to map from board coordinates to entire frame coordinates'''
+        """
+        Responsible for updating the ball position to map from board coordinates to entire frame coordinates
+
+        Args:
+            board_positions (tuple): The board positions
+            detected_ball (tuple): The detected ball
+        """
 
         return detected_ball[0] + board_positions[0], detected_ball[1] + board_positions[1]
 
     def classify_ball_colours(self, frame, detected_ball, options):
-        '''Responsible for classifying a ball'''
+        """
+        Responsible for classifying a ball
+
+        Args:
+            frame (numpy): The frame to find the balls in
+            detected_ball (tuple): The detected ball
+            options (Options): The options to be used
+        """
 
         ball_colour = None
 
@@ -86,10 +125,15 @@ class Bot:
         return ball_colour
 
     def find_optimal_path(self, options):
-        '''Responsible for initiating the find optimal path method'''
+        """
+        Responsible for initiating the find optimal path method
 
-        optimal_path = []
-        all_objects = self.balls + self.holes
+        Args:
+            options (Options): The options to be used
+        """
+
+        # optimal_path = []
+        # all_objects = self.balls + self.holes
 
         ball_path = BallPath(self.balls, self.holes, options)
         optimal_path = ball_path.find_path(options)

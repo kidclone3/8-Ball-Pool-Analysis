@@ -1,4 +1,4 @@
-'''Vector Handling Module'''
+"""Vector Handling Module"""
 
 import sys
 import math
@@ -6,17 +6,37 @@ import numpy as np
 
 
 class Vectors:
-    '''Responsible for handling vector calculation'''
+    """
+    Responsible for handling vectors
+
+    """
 
     @staticmethod
     def distance_from_two_points(point_one, point_two):
-        '''Calculates the distances between two points'''
+        """
+        Responsible for calculating the distance between two points
+        Args:
+            point_one (list[float]): The first point
+            point_two (list[float]): The second point
+
+        Returns:
+
+        """
 
         return math.sqrt(((point_one[0] - point_two[0]) ** 2) + ((point_one[1] - point_two[1]) ** 2))
 
     @staticmethod
     def move_from_two_points(point_one, point_two, distance):
-        '''Moving a particular distance along a line starting from point one'''
+        """
+        Responsible for moving a point from another point by a distance
+        Args:
+            point_one (list[float]): The first point
+            point_two (list[float]): The second point
+            distance (int): The distance to move
+
+        Returns:
+
+        """
 
         point_a = np.array([point_one[0], point_one[1]])
         point_b = np.array([point_two[0], point_two[1]])
@@ -31,7 +51,15 @@ class Vectors:
 
     @staticmethod
     def line_from_two_points(point_one, point_two):
-        '''Returns line terms from two points where line is defined using ax + by + c = 0'''
+        """
+        Responsible for calculating the line from two points
+        Args:
+            point_one (list[float]): The first point
+            point_two (list[float]): The second point
+
+        Returns:
+
+        """
 
         line_a = point_one[1] - point_two[1]
         line_b = point_two[0] - point_one[0]
@@ -43,7 +71,17 @@ class Vectors:
             return (line_a / -line_b), -1, (line_c / -line_b)
 
     def segment_intercept_from_four_points(self, point_a_one, point_a_two, point_b_one, point_b_two):
-        '''Responsible for checking whether two lines intercept within a segment'''
+        """
+        Responsible for calculating the intercept of two segments
+        Args:
+            point_a_one:
+            point_a_two:
+            point_b_one:
+            point_b_two:
+
+        Returns:
+
+        """
 
         np_point_a_one = np.array(point_a_one[0:2])
         np_point_a_two = np.array(point_a_two[0:2])
@@ -71,7 +109,16 @@ class Vectors:
 
     @staticmethod
     def line_intercept_circle(line_terms, circle_point, circle_radius):
-        '''Checks if a line intercepts a circle where line is defined using ax + by + c = 0'''
+        """
+        Responsible for calculating the intercept of a line and a circle
+        Args:
+            line_terms:
+            circle_point:
+            circle_radius:
+
+        Returns:
+
+        """
 
         line_a = line_terms[0]
         line_b = line_terms[1]

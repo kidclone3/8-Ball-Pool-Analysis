@@ -30,8 +30,8 @@ class Vectors:
         """
         Responsible for moving a point from another point by a distance
         Args:
-            point_one (list[float]): The first point
-            point_two (list[float]): The second point
+            point_one (tuple[float, float]): The first point
+            point_two (tuple[float, float]): The second point
             distance (int): The distance to move
 
         Returns:
@@ -54,8 +54,8 @@ class Vectors:
         """
         Responsible for calculating the line from two points
         Args:
-            point_one (list[float]): The first point
-            point_two (list[float]): The second point
+            point_one (list[float]|np.ndArray): The first point
+            point_two (list[float]|np.ndArray): The second point
 
         Returns:
 
@@ -101,8 +101,8 @@ class Vectors:
         point_a_gradient = self.line_from_two_points(np_point_a_one, np_point_a_two)[0]
         is_on_line_a = (intercept[1] - np_point_a_one[1]) == point_a_gradient * (intercept[0] - np_point_a_one[0])
 
-        is_x_occluded = min(np_point_a_one[0], np_point_a_two[0]) <= intercept[0] <= max(np_point_a_one[0], np_point_a_two[0])
-        is_y_occluded = min(np_point_a_one[1], np_point_a_two[1]) <= intercept[1] <= max(np_point_a_one[1], np_point_a_two[1])
+        is_x_occluded = np.min([np_point_a_one[0], np_point_a_two[0]]) <= intercept[0] <= np.max([np_point_a_one[0], np_point_a_two[0]])
+        is_y_occluded = np.min([np_point_a_one[1], np_point_a_two[1]]) <= intercept[1] <= np.max([np_point_a_one[1], np_point_a_two[1]])
         is_between_line_a = is_x_occluded and is_y_occluded
 
         return is_on_line_a and is_between_line_a

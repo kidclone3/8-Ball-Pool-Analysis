@@ -39,8 +39,8 @@ class DijkstraGraph:
         """
         Responsible for finding the optimal path for a goal
         Args:
-            start (list[float]): The start node
-            goals (list[list[float]]): The goals
+            start (tuple[float, float]): The start node
+            goals (list[tuple[int, int]]): The goals
 
         Returns:
 

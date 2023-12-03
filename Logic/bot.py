@@ -126,10 +126,6 @@ class Bot:
         color_count = len(ball_pixels) - white_count - black_count
         total = len(ball_pixels)
 
-        # Histogram of 3 channels
-        hist = cv2.calcHist(ball_pixels, [0, 1, 2], None, [8, 8, 8],
-                            [0, 256, 0, 256, 0, 256])
-
         if self.ball_classification.is_white_ball(white_count, total):
             ball_colour = BallColour.White
         elif self.ball_classification.is_black_ball(black_count, total):

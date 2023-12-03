@@ -38,8 +38,8 @@ class BallDetection:
 
         gray_image = cv2.cvtColor(entire_frame, cv2.COLOR_BGR2GRAY)
 
-        holes = cv2.HoughCircles(gray_image, cv2.HOUGH_GRADIENT, 1, 20, param1=150, param2=16,
-                                 minRadius=constants.CORNER_RADIUS, maxRadius=constants.CORNER_RADIUS+2)
+        holes = cv2.HoughCircles(gray_image, cv2.HOUGH_GRADIENT, 1, constants.HOLE_RADIUS, param1=150, param2=16,
+                                 minRadius=constants.HOLE_RADIUS-2, maxRadius=constants.HOLE_RADIUS)
 
         if holes is not None:
             holes = np.round(holes[0, :]).astype("int")

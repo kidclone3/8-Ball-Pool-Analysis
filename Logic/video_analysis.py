@@ -69,7 +69,8 @@ class VideoAnalysis:
                 rgb_image = cv2.imread(image_path)
                 gray_image = cv2.cvtColor(rgb_image, cv2.COLOR_BGR2GRAY)
 
-                holes = cv2.HoughCircles(gray_image, cv2.HOUGH_GRADIENT, 1, 10, param1=param1, param2=param2, minRadius=20, maxRadius=21)
+                holes = cv2.HoughCircles(gray_image, cv2.HOUGH_GRADIENT, 1, 10, param1=param1, param2=param2,
+                                         minRadius=20, maxRadius=21)
 
                 if holes is not None:
                     holes = np.round(holes[0, :]).astype("int")
@@ -102,14 +103,17 @@ class VideoAnalysis:
 
                 board_frame_edges = cv2.Canny(board_frame, 200, 300)
 
-                circles = cv2.HoughCircles(board_frame_edges, cv2.HOUGH_GRADIENT, 1, 9, param1=param1, param2=param2, minRadius=7, maxRadius=13)
+                circles = cv2.HoughCircles(board_frame_edges, cv2.HOUGH_GRADIENT, 1, 9, param1=param1, param2=param2,
+                                           minRadius=7, maxRadius=13)
 
                 if circles is not None:
                     circles = np.round(circles[0, :]).astype("int")
 
                     for (x_position, y_position, _) in circles:
-                        cv2.circle(rgb_image, (board_positions[0] + x_position, board_positions[1] + y_position), 2, (15, 10, 25), 3)
-                        cv2.circle(rgb_image, (board_positions[0] + x_position, board_positions[1] + y_position), options.ball_radius, (25, 10, 255), 3)
+                        cv2.circle(rgb_image, (board_positions[0] + x_position, board_positions[1] + y_position), 2,
+                                   (15, 10, 25), 3)
+                        cv2.circle(rgb_image, (board_positions[0] + x_position, board_positions[1] + y_position),
+                                   options.ball_radius, (25, 10, 255), 3)
 
                 cv2.imwrite(self.BALL_TRAINING_PATH + str(param2) + '_' + str(param1) + '.jpg', rgb_image)
 
@@ -125,7 +129,7 @@ class VideoAnalysis:
         frame_count = 0
 
         cap = cv2.VideoCapture(options.input_video[0])
-        cap.set(cv2.CAP_PROP_POS_FRAMES, frame_count) # Start clip from a particular frame
+        cap.set(cv2.CAP_PROP_POS_FRAMES, frame_count)  # Start clip from a particular frame
 
         out = None
 
@@ -150,11 +154,8 @@ class VideoAnalysis:
 
                 self.print_timestamp(frame_count)
 
-                # Blur the frame to reduce noise
-                modified_frame = cv2.GaussianBlur(modified_frame, (5, 5), 0)
-
-                #TODO: unfixed
-                bot.holes = [[1998, 230], [1246, 230], [498, 230], [498, 1000], [1246, 1000], [1998, 1000]]
+                # TODO: unfixed
+                bot.holes = [[2006, 223], [1247, 223], [488, 223], [488, 1015], [1247, 1015], [2006, 1015]]
                 if bot.holes:
                     bot.find_balls(frame, options)
 
@@ -164,18 +165,17 @@ class VideoAnalysis:
                         cv2.circle(modified_frame, (hole[0], hole[1]), options.hole_radius, (255, 255, 255),
                                    constants.CIRCLE_SHIFT)
 
-                    print(f"{len(bot.balls)=}")
                     for ball in bot.balls:
                         rgb_colour = None
 
                         if ball[2] == BallColour.Solid:
-                            rgb_colour = (255, 0, 0)
+                            rgb_colour = (255, 0, 0)  # Blue
                         elif ball[2] == BallColour.Strip:
-                            rgb_colour = (0, 255, 0)
+                            rgb_colour = (0, 255, 0)  # Green
                         elif ball[2] == BallColour.Black:
-                            rgb_colour = (255, 255, 0)
+                            rgb_colour = (255, 255, 0)  # Yellow
                         elif ball[2] == BallColour.White:
-                            rgb_colour = (0, 255, 255)
+                            rgb_colour = (0, 255, 255)  # Cyan
 
                         if rgb_colour is not None:
                             cv2.circle(modified_frame, (ball[0], ball[1]), constants.DOT_RADIUS, (0, 0, 0),
@@ -205,8 +205,9 @@ class VideoAnalysis:
                     out.write(modified_frame)
 
                 if options.show_video:
+                    cv2.imwrite(f"Output/Original/{frame_count}.jpg", frame)
                     cv2.imshow('Object Detection', modified_frame)
-                    cv2.imwrite(f'Output/{frame_count}.jpg', modified_frame)
+                    cv2.imwrite(f'Output/Modified/{frame_count}.jpg', modified_frame)
                     if cv2.waitKey(1) & 0xFF == ord('q'):
                         break
             else:

@@ -88,50 +88,50 @@ class BallClassification:
         return black_count
 
     @staticmethod
-    def is_solid_ball(white_count, black_count):
+    def is_solid_ball(color_count, total):
         """
         Checking whether the pixel count is a solid ball
 
         Args:
-            white_count (int): The white pixel count
-            black_count (int): The black pixel count
+            color_count (int): The color pixel count
+            total (int): The total pixel count
         """
 
-        return white_count / (white_count + black_count) <= 0.2
+        return color_count / total >= 0.8
 
     @staticmethod
-    def is_striped_ball(white_count, black_count):
+    def is_striped_ball(color_count, total):
         """
         Checking whether the pixel count is a striped ball
 
         Args:
-            white_count (int): The white pixel count
-            black_count (int): The black pixel count
+            color_count (int): The color pixel count
+            total (int): The total pixel count
         """
 
-        # return 73 <= white_count <= 159 and 0 <= black_count <= 58
-        return white_count / (white_count + black_count) >= 0.7
+        return color_count / total >= 0.2
 
     @staticmethod
-    def is_black_ball(white_count, black_count):
+    def is_black_ball(black_count, total):
         """
         Checking whether the pixel count is a black ball
 
         Args:
-            white_count (int): The white pixel count
             black_count (int): The black pixel count
+            total (int): The total pixel count
         """
 
-        return white_count / (white_count + black_count) <= 0.05
+        return black_count / total >= 0.5
 
     @staticmethod
-    def is_white_ball(white_count, black_count):
+    def is_white_ball(white_count, total):
         """
         Checking whether the pixel count is a white ball
 
         Args:
             white_count (int): The white pixel count
-            black_count (int): The black pixel count
+            total (int): The total pixel count
         """
 
-        return white_count / (white_count + black_count) >= 0.95
+        return white_count / total >= 0.95
+

@@ -1,0 +1,1 @@
+python start.py -hr 50 -br 17 -bd 10 -ip /Users/delus/Downloads/8-ball-pool.mp4 -op ./Output/vid1.mp4 -show

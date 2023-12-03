@@ -31,7 +31,7 @@ class BallDetection:
         Responsible for returning an array of hole positions
 
         Args:
-            entire_frame (numpy): The entire frame to find the holes in
+            entire_frame (np.ndArray): The entire frame to find the holes in
         """
 
         detected_holes = []
@@ -55,7 +55,7 @@ class BallDetection:
         Responsible for returning an array of ball positions
 
         Args:
-            board_frame_edges (numpy): The board frame edges to find the balls in
+            board_frame_edges (np.ndArray): The board frame edges to find the balls in
         """
 
         detected_balls = []

@@ -1,6 +1,7 @@
 """Bot Handling Module"""
 
 import cv2
+import numpy as np
 
 from Logic.Detection.ball_classification import BallClassification
 from Logic.Detection.ball_colour import BallColour
@@ -27,7 +28,7 @@ class Bot:
         Responsible for finding the holes if not set
 
         Args:
-            frame (numpy): The frame to find the holes in
+            frame (np.ndArray): The frame to find the holes in
         Returns:
             None
         """
@@ -53,14 +54,21 @@ class Bot:
         Responsible for finding the balls
 
         Args:
-            frame (numpy): The frame to find the balls in
+            frame (np.ndArray): The frame to find the balls in
             options (Options): The options to be used
         """
 
         board_positions = self.ball_detection.board_boundary(self.holes)
 
         board_frame = frame[board_positions[1]:board_positions[3], board_positions[0]:board_positions[2]]
-        board_frame_edges = cv2.Canny(board_frame, 200, 300)
+        # board_frame_edges = cv2.Canny(board_frame, 200, 300)
+        # Sharpening the image to increase ball detect accuracy
+        blur = cv2.GaussianBlur(board_frame, (0, 0), 3)
+
+        sharp_foreground = cv2.addWeighted(board_frame, 2, blur, -1, 0)
+        sharp_foreground = np.maximum(sharp_foreground, 10)
+
+        board_frame_edges = cv2.Canny(sharp_foreground, 200, 300)
 
         detected_balls = self.ball_detection.find_balls(board_frame_edges)
 
@@ -115,17 +123,23 @@ class Bot:
 
         white_count = self.ball_classification.get_white_count(ball_pixels)
         black_count = self.ball_classification.get_black_count(ball_pixels) + 1  # avoid division by zero
+        color_count = len(ball_pixels) - white_count - black_count
+        total = len(ball_pixels)
 
-        if self.ball_classification.is_white_ball(white_count, black_count):
+        # Histogram of 3 channels
+        hist = cv2.calcHist(ball_pixels, [0, 1, 2], None, [8, 8, 8],
+                            [0, 256, 0, 256, 0, 256])
+
+        if self.ball_classification.is_white_ball(white_count, total):
             ball_colour = BallColour.White
-        elif self.ball_classification.is_black_ball(white_count, black_count):
+        elif self.ball_classification.is_black_ball(black_count, total):
             ball_colour = BallColour.Black
-        elif self.ball_classification.is_solid_ball(white_count, black_count):
+        elif self.ball_classification.is_solid_ball(color_count, total):
             ball_colour = BallColour.Solid
-        elif self.ball_classification.is_striped_ball(white_count, black_count):
+        elif self.ball_classification.is_striped_ball(color_count, total):
             ball_colour = BallColour.Strip
 
-        print(f"{ball_colour=}, {white_count/(white_count+black_count)=} {detected_ball=}")
+        print(f"{ball_colour=}, {total=} {white_count=} {black_count=} {detected_ball=}")
         return ball_colour
 
     def find_optimal_path(self, options):

@@ -4,6 +4,7 @@ import os
 import numpy as np
 import cv2
 
+from Logic import constants
 from Logic.bot import Bot
 from Logic.Path.ball_path import BallPath
 from Logic.Detection.ball_colour import BallColour
@@ -123,7 +124,7 @@ class VideoAnalysis:
         bot = Bot()
         frame_count = 0
 
-        cap = cv2.VideoCapture(options.input_video)
+        cap = cv2.VideoCapture(options.input_video[0])
         cap.set(cv2.CAP_PROP_POS_FRAMES, frame_count) # Start clip from a particular frame
 
         out = None
@@ -136,65 +137,76 @@ class VideoAnalysis:
             height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
             if not out and options.save_video:
-                out = cv2.VideoWriter(options.output_video, 0x7634706d, 30, (width, height))
+                out = cv2.VideoWriter(options.output_video[0], 0x7634706d, 30, (width, height))
 
             if frame_count % options.skip_frame != 0:
                 continue
 
             if not bot.holes:
-                bot.find_holes(frame)
+                outer_conner = bot.find_holes(frame)
 
             if ret:
                 modified_frame = frame.copy()
 
                 self.print_timestamp(frame_count)
 
+                # Blur the frame to reduce noise
+                modified_frame = cv2.GaussianBlur(modified_frame, (5, 5), 0)
+
+                #TODO: unfixed
+                bot.holes = [[1998, 230], [1246, 230], [498, 230], [498, 1000], [1246, 1000], [1998, 1000]]
                 if bot.holes:
                     bot.find_balls(frame, options)
 
                     for hole in bot.holes:
-                        cv2.circle(modified_frame, (hole[0], hole[1]), 2, (255, 255, 255), 3)
-                        cv2.circle(modified_frame, (hole[0], hole[1]), options.hole_radius, (255, 255, 255), 3)
+                        cv2.circle(modified_frame, (hole[0], hole[1]), constants.DOT_RADIUS, (255, 255, 255),
+                                   constants.CIRCLE_SHIFT)
+                        cv2.circle(modified_frame, (hole[0], hole[1]), options.hole_radius, (255, 255, 255),
+                                   constants.CIRCLE_SHIFT)
 
+                    print(f"{len(bot.balls)=}")
                     for ball in bot.balls:
                         rgb_colour = None
 
-                        if ball[2] is BallColour.Solid:
+                        if ball[2] == BallColour.Solid:
                             rgb_colour = (255, 0, 0)
-                        elif ball[2] is BallColour.Strip:
+                        elif ball[2] == BallColour.Strip:
                             rgb_colour = (0, 255, 0)
-                        elif ball[2] is BallColour.Black:
+                        elif ball[2] == BallColour.Black:
                             rgb_colour = (255, 255, 0)
-                        elif ball[2] is BallColour.White:
+                        elif ball[2] == BallColour.White:
                             rgb_colour = (0, 255, 255)
 
                         if rgb_colour is not None:
-                            cv2.circle(modified_frame, (ball[0], ball[1]), 2, (0, 0, 0), 3)
-                            cv2.circle(modified_frame, (ball[0], ball[1]), options.ball_radius, rgb_colour, 3)
+                            cv2.circle(modified_frame, (ball[0], ball[1]), constants.DOT_RADIUS, (0, 0, 0),
+                                       constants.CIRCLE_SHIFT)
+                            cv2.circle(modified_frame, (ball[0], ball[1]), constants.BALL_RADIUS, rgb_colour,
+                                       constants.CIRCLE_SHIFT)
 
-                    optimal_path = bot.find_optimal_path(options)
-
-                    for i, _ in enumerate(optimal_path[:-1]):
-                        cv2.line(modified_frame, optimal_path[i], optimal_path[i + 1], (0, 0, 0), 3)
-
-                    ball_path = BallPath(bot.balls, bot.holes, options)
-
-                    target_holes = ball_path.get_target_holes(options)
-
-                    for a_target in target_holes:
-                        cv2.circle(modified_frame, (a_target[0], a_target[1]), 2, (0, 0, 0), 3)
-
-                    shrink_border = ball_path.get_shrink_borders(options)
-
-                    for i, _ in enumerate(shrink_border):
-                        if i % 2 != 0:
-                            cv2.line(modified_frame, shrink_border[i], shrink_border[(i + 1) % len(shrink_border)], (150, 150, 255), 3)
+                    # optimal_path = bot.find_optimal_path(options)
+                    #
+                    # for i, _ in enumerate(optimal_path[:-1]):
+                    #     cv2.line(modified_frame, optimal_path[i], optimal_path[i + 1], (0, 0, 0), 3)
+                    #
+                    # ball_path = BallPath(bot.balls, bot.holes, options)
+                    #
+                    # target_holes = ball_path.get_target_holes(options)
+                    #
+                    # for a_target in target_holes:
+                    #     cv2.circle(modified_frame, (a_target[0], a_target[1]), 2, (0, 0, 0), 3)
+                    #
+                    # shrink_border = ball_path.get_shrink_borders(options)
+                    #
+                    # for i, _ in enumerate(shrink_border):
+                    #     if i % 2 != 0:
+                    #         cv2.line(modified_frame, shrink_border[i], shrink_border[(i + 1) % len(shrink_border)], (150, 150, 255), 3)
 
                 if options.save_video:
                     out.write(modified_frame)
 
                 if options.show_video:
                     cv2.imshow('Object Detection', modified_frame)
+                    cv2.imwrite(f'Output/{frame_count}.jpg', modified_frame)
                     if cv2.waitKey(1) & 0xFF == ord('q'):
                         break
             else:

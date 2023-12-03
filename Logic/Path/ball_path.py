@@ -15,7 +15,7 @@ class BallPath:
     Parameters:
         balls (list[tuple[float, float]]):
             List of tuples representing the positions of all the billiard balls.
-        holes (list[tuple[float, float]]):
+        holes (list[list[int, int]]):
             List of tuples representing the positions of the pockets (holes) on the billiard table.
         options (Options):
             Instance of the options class.
@@ -39,7 +39,7 @@ class BallPath:
         target_balls (list[tuple[float, float]]):
             List of tuples representing the positions of the target balls.
 
-        white (tuple[float, float] or None):
+        white (tuple[float, float] | None):
             Position of the white ball or None if not present.
 
         sorted_holes (list[tuple[float, float]]):
@@ -68,7 +68,7 @@ class BallPath:
         self.balls = balls
         self.target_balls = [(balls[target_index][0], balls[target_index][1]) for target_index in self.target_indices]
 
-        if self.white_index:
+        if self.white_index is not None:
             self.white = balls[self.white_index]
 
         self.sorted_holes = sorted(holes, key=lambda tup: (-tup[1], tup[0]))
@@ -226,7 +226,7 @@ class BallPath:
             ball_colour (BallColour):
 
         Returns:
-
+            int: The index of the ball
         """
         ball_colour_indices = []
 

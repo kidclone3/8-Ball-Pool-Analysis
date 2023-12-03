@@ -97,7 +97,7 @@ class BallClassification:
             black_count (int): The black pixel count
         """
 
-        return 7 <= white_count <= 72 and 0 <= black_count <= 41
+        return white_count / (white_count + black_count) <= 0.2
 
     @staticmethod
     def is_striped_ball(white_count, black_count):
@@ -109,7 +109,8 @@ class BallClassification:
             black_count (int): The black pixel count
         """
 
-        return 73 <= white_count <= 159 and 0 <= black_count <= 58
+        # return 73 <= white_count <= 159 and 0 <= black_count <= 58
+        return white_count / (white_count + black_count) >= 0.7
 
     @staticmethod
     def is_black_ball(white_count, black_count):
@@ -121,15 +122,16 @@ class BallClassification:
             black_count (int): The black pixel count
         """
 
-        return (7 <= white_count <= 38 and 131 <= black_count <= 177) or (73 <= white_count <= 159 and 83 <= black_count <= 99)
+        return white_count / (white_count + black_count) <= 0.05
 
     @staticmethod
-    def is_white_ball(white_count):
+    def is_white_ball(white_count, black_count):
         """
         Checking whether the pixel count is a white ball
 
         Args:
             white_count (int): The white pixel count
+            black_count (int): The black pixel count
         """
 
-        return 160 <= white_count <= 238
+        return white_count / (white_count + black_count) >= 0.95

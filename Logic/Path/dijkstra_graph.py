@@ -49,11 +49,11 @@ class DijkstraGraph:
         paths = []
         distances = []
 
-        start = (start[0], start[1])
-        goals = [(goal[0], goal[1]) for goal in goals]
+        _start = (start[0], start[1])
+        _goals = [(goal[0], goal[1]) for goal in goals]
 
-        for goal in goals:
-            path, distance = self.find_a_goal_path(start, goal)
+        for goal in _goals:
+            path, distance = self.find_a_goal_path(_start, goal)
 
             if distance != math.inf:
                 paths.append(path)

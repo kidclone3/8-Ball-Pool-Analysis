@@ -45,6 +45,9 @@ class Bot:
                 self.holes.append(
                     (int(board_positions[0] + ((board_positions[2] - board_positions[0]) / 2)), board_positions[3]))
 
+            # Debug only
+            return corner_holes
+
     def find_balls(self, frame, options):
         """
         Responsible for finding the balls
@@ -111,17 +114,18 @@ class Bot:
         ball_pixels = self.ball_classification.get_ball_pixels(frame, detected_ball, options)
 
         white_count = self.ball_classification.get_white_count(ball_pixels)
-        black_count = self.ball_classification.get_black_count(ball_pixels)
+        black_count = self.ball_classification.get_black_count(ball_pixels) + 1  # avoid division by zero
 
-        if self.ball_classification.is_solid_ball(white_count, black_count):
+        if self.ball_classification.is_white_ball(white_count, black_count):
+            ball_colour = BallColour.White
+        elif self.ball_classification.is_black_ball(white_count, black_count):
+            ball_colour = BallColour.Black
+        elif self.ball_classification.is_solid_ball(white_count, black_count):
             ball_colour = BallColour.Solid
         elif self.ball_classification.is_striped_ball(white_count, black_count):
             ball_colour = BallColour.Strip
-        elif self.ball_classification.is_black_ball(white_count, black_count):
-            ball_colour = BallColour.Black
-        elif self.ball_classification.is_white_ball(white_count):
-            ball_colour = BallColour.White
 
+        print(f"{ball_colour=}, {white_count/(white_count+black_count)=} {detected_ball=}")
         return ball_colour
 
     def find_optimal_path(self, options):

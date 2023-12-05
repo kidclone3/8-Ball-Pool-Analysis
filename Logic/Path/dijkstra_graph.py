@@ -4,6 +4,7 @@ from collections import defaultdict
 
 import math
 import numpy as np
+from numba import jit
 
 
 class DijkstraGraph:
@@ -20,8 +21,8 @@ class DijkstraGraph:
         """
         Responsible for adding an edge to the graph
         Args:
-            from_node (list[float]): The from node
-            to_node (list[float]): The to node
+            from_node (tuple[float, float]): The from node
+            to_node (tuple[float, float]): The to node
             weight (int): The weight of the edge
 
         Returns:
@@ -32,8 +33,8 @@ class DijkstraGraph:
 
         self.edges[_from_node].append(_to_node)
         self.edges[_to_node].append(_from_node)
-        self.weights[(from_node, to_node)] = weight
-        self.weights[(to_node, from_node)] = weight
+        self.weights[(_from_node, _to_node)] = weight
+        self.weights[(_to_node, _from_node)] = weight
 
     def find_any_goal_path(self, start, goals):
         """

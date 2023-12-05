@@ -133,5 +133,5 @@ class BallClassification:
             total (int): The total pixel count
         """
 
-        return white_count / total >= 0.95
+        return white_count / total >= 0.89
 

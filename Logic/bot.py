@@ -135,7 +135,7 @@ class Bot:
         elif self.ball_classification.is_striped_ball(color_count, total):
             ball_colour = BallColour.Strip
 
-        print(f"{ball_colour=}, {total=} {white_count=} {black_count=} {detected_ball=}")
+        # print(f"{ball_colour=}, {total=} {white_count=} {black_count=} {detected_ball=}")
         return ball_colour
 
     def find_optimal_path(self, options):

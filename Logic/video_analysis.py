@@ -126,7 +126,7 @@ class VideoAnalysis:
         """
 
         bot = Bot()
-        frame_count = 0
+        frame_count = 30 # Skip the first 30 frames
 
         cap = cv2.VideoCapture(options.input_video[0])
         cap.set(cv2.CAP_PROP_POS_FRAMES, frame_count)  # Start clip from a particular frame
@@ -206,7 +206,7 @@ class VideoAnalysis:
                 if options.show_video:
                     cv2.imwrite(f"Output/Original/{frame_count}.jpg", frame)
                     cv2.imshow('Object Detection', modified_frame)
-                    cv2.imwrite(f'Output/Modified/{frame_count}.jpg', modified_frame)
+                    # cv2.imwrite(f'Output/Modified/{frame_count}.jpg', modified_frame)
                     if cv2.waitKey(1) & 0xFF == ord('q'):
                         break
             else:

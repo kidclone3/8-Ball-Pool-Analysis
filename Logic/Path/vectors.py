@@ -3,6 +3,7 @@
 import sys
 import math
 import numpy as np
+from numba import jit
 
 
 class Vectors:
@@ -12,12 +13,13 @@ class Vectors:
     """
 
     @staticmethod
+    @jit
     def distance_from_two_points(point_one, point_two):
         """
         Responsible for calculating the distance between two points
         Args:
-            point_one (list[float]): The first point
-            point_two (list[float]): The second point
+            point_one (tuple[float, float]): The first point
+            point_two (tuple[float, float]): The second point
 
         Returns:
 
@@ -26,6 +28,7 @@ class Vectors:
         return math.sqrt(((point_one[0] - point_two[0]) ** 2) + ((point_one[1] - point_two[1]) ** 2))
 
     @staticmethod
+    @jit
     def move_from_two_points(point_one, point_two, distance):
         """
         Responsible for moving a point from another point by a distance
@@ -35,7 +38,7 @@ class Vectors:
             distance (int): The distance to move
 
         Returns:
-
+            tuple[int, int]: The new point
         """
 
         point_a = np.array([point_one[0], point_one[1]])
@@ -50,6 +53,7 @@ class Vectors:
         return int(target_point[0]), int(target_point[1])
 
     @staticmethod
+    @jit
     def line_from_two_points(point_one, point_two):
         """
         Responsible for calculating the line from two points
@@ -70,6 +74,7 @@ class Vectors:
         else:
             return (line_a / -line_b), -1, (line_c / -line_b)
 
+    @jit
     def segment_intercept_from_four_points(self, point_a_one, point_a_two, point_b_one, point_b_two):
         """
         Responsible for calculating the intercept of two segments
@@ -108,6 +113,7 @@ class Vectors:
         return is_on_line_a and is_between_line_a
 
     @staticmethod
+    @jit
     def line_intercept_circle(line_terms, circle_point, circle_radius):
         """
         Responsible for calculating the intercept of a line and a circle

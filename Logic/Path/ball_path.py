@@ -6,7 +6,7 @@ import numpy as np
 from Logic.Path.vectors import Vectors
 from Logic.Detection.ball_colour import BallColour
 from Logic.Path.dijkstra_graph import DijkstraGraph
-
+from numba import jit
 
 class BallPath:
     """
@@ -33,10 +33,10 @@ class BallPath:
         target_indices (list[int]):
             Indices of the target balls in the 'balls' list.
 
-        balls (list[tuple[float, float]]):
+        balls (list[float]):
             List of tuples representing the positions of all the billiard balls.
 
-        target_balls (list[tuple[float, float]]):
+        target_balls (list[list[float]]):
             List of tuples representing the positions of the target balls.
 
         white (tuple[float, float] | None):
@@ -137,6 +137,8 @@ class BallPath:
             ball_index (int): The index of the ball
             hole_index (int): The index of the hole
             options (Options): The options to be used
+        Returns:
+            tuple[float, float] | None: The target hit position
         """
 
         ball = self.balls[ball_index]
@@ -167,6 +169,7 @@ class BallPath:
 
         return target_position
 
+    @jit
     def is_path_valid(self, white_position, target_hit_position, exclude_indices, options):
         """
         Responsible for checking if a path is valid
@@ -226,19 +229,23 @@ class BallPath:
             ball_colour (BallColour):
 
         Returns:
-            int: The index of the ball
+            int | None | list: The index of white or black ball, None if not present, or list of indices of target balls
         """
         ball_colour_indices = []
 
         for i, _ in enumerate(balls):
-            if balls[i][2] is ball_colour:
+            if balls[i][2] == ball_colour:
                 ball_colour_indices.append(i)
 
         if ball_colour == BallColour.White or ball_colour == BallColour.Black:
             if ball_colour_indices:
                 return ball_colour_indices[0]
+            else:
+                return None
 
         return ball_colour_indices
+
+    @jit
 
     def get_target_holes(self, options):
         """

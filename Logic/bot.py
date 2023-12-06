@@ -94,7 +94,7 @@ class Bot:
                 ball_colour = self.classify_ball_colours(frame, new_ball_position, options)
 
                 self.balls.append((int(new_ball_position[0]), int(new_ball_position[1]), ball_colour))
-
+        print(self.balls)
     @staticmethod
     def update_ball_positions(board_positions, detected_ball):
         """

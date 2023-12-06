@@ -181,8 +181,14 @@ class VideoAnalysis:
                             cv2.circle(modified_frame, (ball[0], ball[1]), constants.BALL_RADIUS, rgb_colour,
                                        constants.CIRCLE_SHIFT)
 
+                    # Find the optimal path
                     optimal_path = bot.find_optimal_path(options)
+                    ball_path = BallPath(bot.balls, bot.holes, options)
+                    shrink_border = ball_path.get_shrink_borders(options)
 
+                    for i, _ in enumerate(shrink_border):
+                        if i % 2 != 0:
+                            cv2.line(modified_frame, shrink_border[i], shrink_border[(i + 1) % len(shrink_border)], (150, 150, 255), constants.BORDER_THICKNESS)
                     if len(optimal_path) > 1:
                         for i, _ in enumerate(optimal_path[:-1]):
                             cv2.line(modified_frame, optimal_path[i], optimal_path[i + 1], (0, 0, 0), 3)
@@ -192,13 +198,7 @@ class VideoAnalysis:
                         target_holes = ball_path.get_target_holes(options)
 
                         for a_target in target_holes:
-                            cv2.circle(modified_frame, (a_target[0], a_target[1]), 2, (0, 0, 0), 3)
-
-                        shrink_border = ball_path.get_shrink_borders(options)
-
-                        for i, _ in enumerate(shrink_border):
-                            if i % 2 != 0:
-                                cv2.line(modified_frame, shrink_border[i], shrink_border[(i + 1) % len(shrink_border)], (150, 150, 255), 3)
+                            cv2.circle(modified_frame, (a_target[0], a_target[1]), 2, (0, 0, 0), 10)
 
                 if options.save_video:
                     out.write(modified_frame)
@@ -206,7 +206,7 @@ class VideoAnalysis:
                 if options.show_video:
                     cv2.imwrite(f"Output/Original/{frame_count}.jpg", frame)
                     cv2.imshow('Object Detection', modified_frame)
-                    # cv2.imwrite(f'Output/Modified/{frame_count}.jpg', modified_frame)
+                    cv2.imwrite(f'Output/Modified/{frame_count}.jpg', modified_frame)
                     if cv2.waitKey(1) & 0xFF == ord('q'):
                         break
             else:

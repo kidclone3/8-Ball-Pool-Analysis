@@ -210,10 +210,10 @@ class BallPath:
 
         """
         lower_target_ball = (target_ball[0] - options.ball_diameter, target_ball[1] - options.ball_diameter)
-        upper_target_ball = (target_ball[0] - options.ball_diameter, target_ball[1] - options.ball_diameter)
+        upper_target_ball = (target_ball[0] + options.ball_diameter, target_ball[1] + options.ball_diameter)
 
         lower_target_hole = (target_hole[0] - options.ball_diameter, target_hole[1] - options.ball_diameter)
-        upper_target_hole = (target_hole[0] - options.ball_diameter, target_hole[1] - options.ball_diameter)
+        upper_target_hole = (target_hole[0] + options.ball_diameter, target_hole[1] + options.ball_diameter)
 
         not_valid_x = lower_target_ball[0] < white[0] < upper_target_hole[0] or lower_target_hole[0] < white[0] < upper_target_ball[0]
         not_valid_y = lower_target_ball[1] < white[1] < upper_target_hole[1] or lower_target_hole[1] < white[1] < upper_target_ball[1]

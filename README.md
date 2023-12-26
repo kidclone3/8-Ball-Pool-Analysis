@@ -4,14 +4,24 @@ This is an Open Source project that analyses game footage from **[Miniclip's 8 b
 
 It determines paths, which show the user a possibility of how the balls could be potted.
 
-![animated.gif](../master/Assets/animated.gif)
+![animated.gif](Assets/animated.gif)
+
+## File Structure
+
++ **Report/** - Contains the report for this project.
++ **Slideshow/** - Contains the slideshow for this project.
++ Other files - Contains the source code for this project.
 
 ## Installation
 
 This tool uses standard image processing techniques through OpenCV, together with some vector algebra and graph logic.
 
-```
-pip install opencv-python
+The following packages are required to run this tool, OS (MacOS, Linux):
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 ```
 
 ## Usage
